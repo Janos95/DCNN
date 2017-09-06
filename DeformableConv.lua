@@ -1,7 +1,7 @@
 
-local DeformableConv, parent = torch.class('nn.DeformableConv', 'nn.Module')
+local DeformableConvolution, parent = torch.class('nn.DeformableConvolution', 'nn.Module')
 
-function DeformableConv:__init(nInputPlane, nOutputPlane, kW, kH)
+function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
    parent.__init(self)
 
 
@@ -20,7 +20,7 @@ function DeformableConv:__init(nInputPlane, nOutputPlane, kW, kH)
 
 end
 
-function DeformableConv:updateOutput(input)
+function DeformableConvolution:updateOutput(input)
     self.output = torch.Tensor(self.nOutputPlane, input:size(2),input:size(3))
     for i=1,self.nOutputPlane do
         for j=1,self.nInputPlane do
@@ -34,7 +34,7 @@ end
     
     
 
-function DeformableConv:convolution(kernel, image)
+function DeformableConvolution:convolution(kernel, image)
     output_image = torch.Tensor(image:size()):zero()
     local w = image:size(1)
     local h = image:size(2)
