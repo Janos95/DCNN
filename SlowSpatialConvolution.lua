@@ -1,7 +1,7 @@
 
-local DeformableConvolution, parent = torch.class('nn.DeformableConvolution', 'nn.Module')
+local SlowSpatialConvolution, parent = torch.class('nn.SlowSpatialConvolution', 'nn.Module')
 
-function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, padH)
+function SlowSpatialConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, padH)
    parent.__init(self)
 
 
@@ -20,7 +20,7 @@ function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, p
 
 end
 
-function DeformableConvolution:updateOutput(input)
+function SlowSpatialConvolution:updateOutput(input)
     local wOutputImage = input:size(3)-2*math.floor(self.kW/2)+2*self.padW
     local hOutputImage = input:size(2)-2*math.floor(self.kH/2)+2*self.padH
     
@@ -36,14 +36,16 @@ end
     
     
 
-function DeformableConvolution:convolution(kernel, image, wOutputImage, hOutputImage)
+function SlowSpatialConvolution:convolution(kernel, image, wOutputImage, hOutputImage)
     
     output_image = torch.Tensor(hOutputImage,wOutputImage):zero()
     local image_framed = torch.Tensor(image:size(1)+2*self.padH,image:size(2)+2*self.padW):zero()
     
-    for i = 1,image:size(1) do
-        for j=1,image:size(2) do
-            image_framed[i+self.padH][j+self.padW] = image[i][j]
+    if(self.padH > 0 or self.padW > 0) then
+        for i = 1,image:size(1) do
+            for j=1,image:size(2) do
+                image_framed[i+self.padH][j+self.padW] = image[i][j]
+            end
         end
     end
     
@@ -59,7 +61,7 @@ function DeformableConvolution:convolution(kernel, image, wOutputImage, hOutputI
     return output_image
 end
 
-function DeformableConvolution:rotateAbout180(input)
+function SlowSpatialConvolution:rotateAbout180(input)
     output = torch.Tensor(input:size())
     for i = 1, input:size(1) do
         for j = 1, input:size(2) do
@@ -72,8 +74,7 @@ function DeformableConvolution:rotateAbout180(input)
 end
         
 
-
-function DeformableConvolution:updateGradInput(input,gradOutput)
+function SlowSpatialConvolution:updateGradInput(input,gradOutput)
     self.gradInput = torch.Tensor(input:size()):zero()
     for c1star = 1,self.nInputPlane do
         for istar = 1, input:size(2) do
@@ -96,7 +97,7 @@ function DeformableConvolution:updateGradInput(input,gradOutput)
 end
     
     
-function DeformableConvolution:accGradParameters(input,gradOutput, scale)
+function SlowSpatialConvolution:accGradParameters(input,gradOutput, scale)
     self.gradWeight:zero()
     self.gradBias:zero()
     ones = torch.Tensor(gradOutput:size(2),gradOutput:size(3)):fill(1)

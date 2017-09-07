@@ -1,10 +1,13 @@
 require 'nn'
 require 'paths'
 require 'image'
+require 'DeformableConvolution'
+require 'almostIdentity'
 
 net = nn.Sequential()
 net:add(nn.SpatialConvolution(3, 6, 5, 5)) -- 3 input image channels, 6 output channels, 5x5 convolution kernel
 net:add(nn.ReLU())                       -- non-linearity 
+net:add(nn.almostIdentity())
 net:add(nn.SpatialMaxPooling(2,2,2,2))     -- A max-pooling operation that looks at 2x2 windows and finds the max.
 net:add(nn.SpatialConvolution(6, 16, 5, 5))
 net:add(nn.ReLU())                       -- non-linearity 
@@ -43,9 +46,9 @@ criterion = nn.ClassNLLCriterion()
 
 trainer = nn.StochasticGradient(net, criterion)
 trainer.learningRate = 0.001
-trainer.maxIteration = 5 -- just do 5 epochs of training.
+trainer.maxIteration = 1 -- just do 5 epochs of training.
         
---trainer:train(trainset)
+trainer:train(trainset)
 
 testset.data = testset.data:double()   -- convert from Byte tensor to Double tensor
 
@@ -61,5 +64,4 @@ end
 
 print(correct, 100*correct/10000 .. ' % ')
 
-itorch.image(trainset.data[100]) -- display the 100-th image in dataset
---print(classes[trainset.label[100]])
+
