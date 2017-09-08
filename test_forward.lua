@@ -1,14 +1,14 @@
 require 'nn'
 require 'paths'
 require 'image'
-require 'DeformableConvolution'
+require 'SlowSpatialConvolution'
 local nninit= require 'nninit'
 
 net = nn.Sequential()
-net:add(nn.SpatialConvolution(3,6,3,3):init('weight',nninit.constant,1):init('bias', nninit.constant,0)) -- 3 input image channels, 6 output channels, 5x5 
+net:add(nn.SpatialConvolution(3,6,4,4):init('weight',nninit.constant,1):init('bias', nninit.constant,0)) -- 3 input image channels, 6 output channels, 5x5 
 
 net_new = nn.Sequential()
-net_new:add(nn.DeformableConvolution(3,6,3,3):init('weight',nninit.constant,1):init('bias', nninit.constant,0)) -- 3 input image channels, 6 output channels, 5x5
+net_new:add(nn.SlowSpatialConvolution(3,6,4,4):init('weight',nninit.constant,1):init('bias', nninit.constant,0)) -- 3 input image channels, 6 output channels, 5x5
 
 
 
@@ -19,7 +19,7 @@ classes = {'airplane', 'automobile', 'bird', 'cat',
            
 input = torch.rand(3,6,8)
 
-gradOutput = torch.rand(6,4,6)
+gradOutput = torch.rand(6,3,5)
 
 net:zeroGradParameters()
 

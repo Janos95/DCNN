@@ -1,7 +1,9 @@
 
+require 'slowspatialconvolution'
+
 local SlowSpatialConvolution, parent = torch.class('nn.SlowSpatialConvolution', 'nn.Module')
 
-function SlowSpatialConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, padH)
+function SlowSpatialConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
    parent.__init(self)
 
 
@@ -9,9 +11,7 @@ function SlowSpatialConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, 
    self.nOutputPlane = nOutputPlane
    self.kW = kW
    self.kH = kH
-   
-   self.padW = padW or 0
-   self.padH = padH or self.padW    
+      
 
    self.weight = torch.Tensor(nOutputPlane, nInputPlane, kH, kW)
    self.bias = torch.Tensor(nOutputPlane)
@@ -20,64 +20,40 @@ function SlowSpatialConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, 
 
 end
 
-function SlowSpatialConvolution:updateOutput(input)
-    local wOutputImage = input:size(3)-2*math.floor(self.kW/2)+2*self.padW
-    local hOutputImage = input:size(2)-2*math.floor(self.kH/2)+2*self.padH
-    
-    self.output = torch.Tensor(self.nOutputPlane, hOutputImage, wOutputImage)
-    for i=1,self.nOutputPlane do
-        for j=1,self.nInputPlane do
-            self.output[i] = self.output[i]+self:convolution(self.weight[i][j],input[j], wOutputImage, hOutputImage)
-        end
-        self.output[i] = self.output[i]+self.bias[i]
-    end
-    return self.output
-end
-    
-    
 
-function SlowSpatialConvolution:convolution(kernel, image, wOutputImage, hOutputImage)
-    
-    output_image = torch.Tensor(hOutputImage,wOutputImage):zero()
-    local image_framed = torch.Tensor(image:size(1)+2*self.padH,image:size(2)+2*self.padW):zero()
-    
-    if(self.padH > 0 or self.padW > 0) then
-        for i = 1,image:size(1) do
-            for j=1,image:size(2) do
-                image_framed[i+self.padH][j+self.padW] = image[i][j]
-            end
-        end
-    end
-    
-    for i=1,wOutputImage do
-        for j=1,hOutputImage do
-            for k=0,self.kW-1 do
-                for l=0,self.kH-1 do
-                    output_image[j][i] = output_image[j][i] + image_framed[j+l][i+k]*kernel[l+1][k+1]
+function SlowSpatialConvolution:im2col(image)
+    local wOutputImage = image:size(3)-self.kW+1
+    local hOutputImage = image:size(2)-self.kH+1
+    outputImage = torch.Tensor(self.kW*self.kH*image:size(1), wOutputImage*hOutputImage)
+    for c = 0, image:size(1)-1 do
+        for k = 0, self.kW - 1 do
+            for l = 1, self.kH do
+                for i = 0, hOutputImage - 1 do
+                    for j = 1, wOutputImage do
+                      outputImage[c*self.kW*self.kH+k*self.kH+l][i*wOutputImage+j] = image[c+1][i+l][j+k]
+                    end
                 end
             end
         end
     end
-    return output_image
+    return outputImage
 end
 
-function SlowSpatialConvolution:rotateAbout180(input)
-    output = torch.Tensor(input:size())
-    for i = 1, input:size(1) do
-        for j = 1, input:size(2) do
-            for k = 1, input:size(3) do 
-                output[i][j][k] = input[i][input:size(2)-j+1][input:size(3)-k+1]
-            end
-        end
-    end
-    return output
+function SlowSpatialConvolution:updateOutput(input)
+    local wOutputImage = input:size(3)-self.kW+1
+    local hOutputImage = input:size(2)-self.kH+1
+    self.output = torch.Tensor(self.nOutputPlane, hOutputImage, wOutputImage)
+    unfoldedInput = slowspatialconvolution.im2col(input,self.kW,self.kH)
+    self.output = torch.mm(self.weight:view(self.nOutputPlane,self.nInputPlane*self.kW*self.kH),unfoldedInput):view(self.nOutputPlane,hOutputImage, wOutputImage)
+    return self.output
 end
-        
+    
+ 
 
 function SlowSpatialConvolution:updateGradInput(input,gradOutput)
     self.gradInput = torch.Tensor(input:size()):zero()
     for c1star = 1,self.nInputPlane do
-        for istar = 1, input:size(2) do
+        for istar = 1,input:size(2) do
             for jstar = 1,input:size(3) do
                 for i = 1,gradOutput:size(2) do
                     for j = 1,gradOutput:size(3) do 
@@ -111,7 +87,7 @@ function SlowSpatialConvolution:accGradParameters(input,gradOutput, scale)
                 for jstar = 1, self.kW do
                     for i = 1, gradOutput:size(2) do
                         for j = 1, gradOutput:size(3) do
-                            self.gradWeight[c2star][c1star][istar][jstar] = self.gradWeight[c2star][c1star][istar][jstar] + gradOutput[c2star][i][j] * input[c1star][i+istar-1][j+jstar-1]
+                                self.gradWeight[c2star][c1star][istar][jstar] = self.gradWeight[c2star][c1star][istar][jstar] + gradOutput[c2star][i][j] * input[c1star][i+istar-1][j+jstar-1]
                         end
                     end
                 end

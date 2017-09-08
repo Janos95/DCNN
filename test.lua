@@ -5,7 +5,7 @@ require 'DeformableConvolution'
 require 'almostIdentity'
 
 net = nn.Sequential()
-net:add(nn.SpatialConvolution(3, 6, 5, 5)) -- 3 input image channels, 6 output channels, 5x5 convolution kernel
+net:add(nn.DeformableConvolution(3, 6, 5, 5)) -- 3 input image channels, 6 output channels, 5x5 convolution kernel
 net:add(nn.ReLU())                       -- non-linearity 
 net:add(nn.almostIdentity())
 net:add(nn.SpatialMaxPooling(2,2,2,2))     -- A max-pooling operation that looks at 2x2 windows and finds the max.

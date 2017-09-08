@@ -1,0 +1,7 @@
+/home/cognitive/DCNN/buildrock/CMakeFiles/install.dir
+/home/cognitive/DCNN/buildrock/CMakeFiles/list_install_components.dir
+/home/cognitive/DCNN/buildrock/CMakeFiles/rebuild_cache.dir
+/home/cognitive/DCNN/buildrock/CMakeFiles/slowspatialconvolution.dir
+/home/cognitive/DCNN/buildrock/CMakeFiles/edit_cache.dir
+/home/cognitive/DCNN/buildrock/CMakeFiles/install/strip.dir
+/home/cognitive/DCNN/buildrock/CMakeFiles/install/local.dir

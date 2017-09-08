@@ -103,7 +103,6 @@ function DeformableConvolution:accGradParameters(input,gradOutput, scale)
     for i = 1, self.nOutputPlane do
         self.gradBias[i] = gradOutput[i]:dot(ones)
     end
-    print(input:size(2) - 2*math.floor(self.kH/2))
     for c1star = 1, self.nInputPlane do
         for c2star = 1, self.nOutputPlane do
             for istar = 1, self.kH do
