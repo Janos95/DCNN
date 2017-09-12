@@ -1,2 +1,2 @@
-/home/cognitive/torch/install/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so
-/home/cognitive/torch/install/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lua/slowspatialconvolution/init.lua
+/home/cognitive/torch/install/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so
+/home/cognitive/torch/install/lib/luarocks/rocks/deformableconvolution/0.1-0/lua/deformableconvolution/init.lua

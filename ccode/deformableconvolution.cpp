@@ -10,7 +10,7 @@
 #include <iostream>
 
 
-#include "SlowSpatialConvolution.h"
+#include "deformableconvolution.h"
 
 
 static int im2col(lua_State *L)
@@ -155,11 +155,11 @@ static const struct luaL_Reg Global_funcs[] = {
 extern "C"
 {
 
-DLL_EXPORT int luaopen_libslowspatialconvolution(lua_State* L)
+DLL_EXPORT int luaopen_libdeformableconvolution(lua_State* L)
 {
 	lua_newtable(L);
 	luaT_setfuncs(L, Global_funcs, 0);
-	lua_setglobal(L, "slowspatialconvolution");
+	lua_setglobal(L, "deformableconvolution");
 
 	return 0;
 }

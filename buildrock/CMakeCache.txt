@@ -81,7 +81,7 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=/home/cognitive/torch/install/lib/luarocks/rocks/slowspatialconvolution/0.1-0
+CMAKE_INSTALL_PREFIX:PATH=/home/cognitive/torch/install/lib/luarocks/rocks/deformableconvolution/0.1-0
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=/usr/bin/ld
@@ -117,7 +117,7 @@ CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 CMAKE_PREFIX_PATH:UNINITIALIZED=/home/cognitive/torch/install/bin/..
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=slowspatialconvolution
+CMAKE_PROJECT_NAME:STATIC=deformableconvolution
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -177,46 +177,20 @@ LUA_INCDIR:UNINITIALIZED=/home/cognitive/torch/install/include
 //No help, variable specified on the command line.
 LUA_LIBDIR:UNINITIALIZED=/home/cognitive/torch/install/lib
 
-//Path where debug 3rdpaty OpenCV dependencies are located
-OpenCV_3RDPARTY_LIB_DIR_DBG:PATH=
-
-//Path where release 3rdpaty OpenCV dependencies are located
-OpenCV_3RDPARTY_LIB_DIR_OPT:PATH=
-
-OpenCV_CONFIG_PATH:FILEPATH=/usr/share/OpenCV
-
-//The directory containing a CMake configuration file for OpenCV.
-OpenCV_DIR:PATH=/usr/share/OpenCV
-
-//Path where debug OpenCV libraries are located
-OpenCV_LIB_DIR_DBG:PATH=
-
-//Path where release OpenCV libraries are located
-OpenCV_LIB_DIR_OPT:PATH=
-
 //The directory containing a CMake configuration file for Torch.
 Torch_DIR:PATH=/home/cognitive/torch/install/share/cmake/torch
 
 //Build libraries with executable rpaths
 WITH_RPATH:BOOL=ON
 
-//Dependencies for target
-ccode/SlowSpatialConvolution.cpp_LIB_DEPENDS:STATIC=
-
 //Value Computed by CMake
-image_augmentation_BINARY_DIR:STATIC=/home/cognitive/DCNN/buildrock
-
-//Value Computed by CMake
-image_augmentation_SOURCE_DIR:STATIC=/home/cognitive/DCNN
-
-//Value Computed by CMake
-slowspatialconvolution_BINARY_DIR:STATIC=/home/cognitive/DCNN/buildrock
+deformableconvolution_BINARY_DIR:STATIC=/home/cognitive/DCNN/buildrock
 
 //Dependencies for the target
-slowspatialconvolution_LIB_DEPENDS:STATIC=general;luaT;general;TH;
+deformableconvolution_LIB_DEPENDS:STATIC=general;luaT;general;TH;
 
 //Value Computed by CMake
-slowspatialconvolution_SOURCE_DIR:STATIC=/home/cognitive/DCNN
+deformableconvolution_SOURCE_DIR:STATIC=/home/cognitive/DCNN
 
 
 ########################
@@ -350,14 +324,4 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_DBG
-OpenCV_3RDPARTY_LIB_DIR_DBG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_OPT
-OpenCV_3RDPARTY_LIB_DIR_OPT-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: OpenCV_CONFIG_PATH
-OpenCV_CONFIG_PATH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: OpenCV_LIB_DIR_DBG
-OpenCV_LIB_DIR_DBG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: OpenCV_LIB_DIR_OPT
-OpenCV_LIB_DIR_OPT-ADVANCED:INTERNAL=1
 

@@ -1,5 +1,5 @@
 
-package = "SlowSpatialConvolution"
+package = "DeformableConvolution"
 version = "0.1-0"
 
 source = {

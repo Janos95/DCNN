@@ -89,17 +89,6 @@ rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -121,6 +110,17 @@ install/local: preinstall
 install/local/fast: install/local
 
 .PHONY : install/local/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -155,44 +155,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named slowspatialconvolution
+# Target rules for targets named deformableconvolution
 
 # Build rule for target.
-slowspatialconvolution: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 slowspatialconvolution
-.PHONY : slowspatialconvolution
+deformableconvolution: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 deformableconvolution
+.PHONY : deformableconvolution
 
 # fast build rule for target.
-slowspatialconvolution/fast:
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/build
-.PHONY : slowspatialconvolution/fast
+deformableconvolution/fast:
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/build
+.PHONY : deformableconvolution/fast
 
-ccode/SlowSpatialConvolution.o: ccode/SlowSpatialConvolution.cpp.o
+ccode/deformableconvolution.o: ccode/deformableconvolution.cpp.o
 
-.PHONY : ccode/SlowSpatialConvolution.o
+.PHONY : ccode/deformableconvolution.o
 
 # target to build an object file
-ccode/SlowSpatialConvolution.cpp.o:
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/ccode/SlowSpatialConvolution.cpp.o
-.PHONY : ccode/SlowSpatialConvolution.cpp.o
+ccode/deformableconvolution.cpp.o:
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/ccode/deformableconvolution.cpp.o
+.PHONY : ccode/deformableconvolution.cpp.o
 
-ccode/SlowSpatialConvolution.i: ccode/SlowSpatialConvolution.cpp.i
+ccode/deformableconvolution.i: ccode/deformableconvolution.cpp.i
 
-.PHONY : ccode/SlowSpatialConvolution.i
+.PHONY : ccode/deformableconvolution.i
 
 # target to preprocess a source file
-ccode/SlowSpatialConvolution.cpp.i:
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/ccode/SlowSpatialConvolution.cpp.i
-.PHONY : ccode/SlowSpatialConvolution.cpp.i
+ccode/deformableconvolution.cpp.i:
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/ccode/deformableconvolution.cpp.i
+.PHONY : ccode/deformableconvolution.cpp.i
 
-ccode/SlowSpatialConvolution.s: ccode/SlowSpatialConvolution.cpp.s
+ccode/deformableconvolution.s: ccode/deformableconvolution.cpp.s
 
-.PHONY : ccode/SlowSpatialConvolution.s
+.PHONY : ccode/deformableconvolution.s
 
 # target to generate assembly for a file
-ccode/SlowSpatialConvolution.cpp.s:
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/ccode/SlowSpatialConvolution.cpp.s
-.PHONY : ccode/SlowSpatialConvolution.cpp.s
+ccode/deformableconvolution.cpp.s:
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/ccode/deformableconvolution.cpp.s
+.PHONY : ccode/deformableconvolution.cpp.s
 
 # Help Target
 help:
@@ -203,13 +203,13 @@ help:
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... slowspatialconvolution"
-	@echo "... edit_cache"
 	@echo "... install/strip"
 	@echo "... install/local"
-	@echo "... ccode/SlowSpatialConvolution.o"
-	@echo "... ccode/SlowSpatialConvolution.i"
-	@echo "... ccode/SlowSpatialConvolution.s"
+	@echo "... deformableconvolution"
+	@echo "... edit_cache"
+	@echo "... ccode/deformableconvolution.o"
+	@echo "... ccode/deformableconvolution.i"
+	@echo "... ccode/deformableconvolution.s"
 .PHONY : help
 
 

@@ -1,7 +1,9 @@
 
-local DeformableConvolution, parent = torch.class('nn.DeformableConvolution', 'nn.Module')
+require 'slowspatialconvolution'
 
-function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, padH)
+local SlowSpatialConvolution, parent = torch.class('nn.SlowSpatialConvolution', 'nn.Module')
+
+function SlowSpatialConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
    parent.__init(self)
 
 
@@ -9,9 +11,7 @@ function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, p
    self.nOutputPlane = nOutputPlane
    self.kW = kW
    self.kH = kH
-   
-   self.padW = padW or 0
-   self.padH = padH or self.padW    
+      
 
    self.weight = torch.Tensor(nOutputPlane, nInputPlane, kH, kW)
    self.bias = torch.Tensor(nOutputPlane)
@@ -20,102 +20,73 @@ function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH, padW, p
 
 end
 
-function DeformableConvolution:updateOutput(input)
-    local wOutputImage = input:size(3)-2*math.floor(self.kW/2)+2*self.padW
-    local hOutputImage = input:size(2)-2*math.floor(self.kH/2)+2*self.padH
+function SlowSpatialConvolution:updateOutput(input)
+    local wOutputImage = input:size(3)-self.kW+1
+    local hOutputImage = input:size(2)-self.kH+1
     
     self.output = torch.Tensor(self.nOutputPlane, hOutputImage, wOutputImage)
-    for i=1,self.nOutputPlane do
-        for j=1,self.nInputPlane do
-            self.output[i] = self.output[i]+self:convolution(self.weight[i][j],input[j], wOutputImage, hOutputImage)
-        end
-        self.output[i] = self.output[i]+self.bias[i]
+    unfoldedInput = slowspatialconvolution.im2col(input,self.kH,self.kW)
+    self.output = torch.mm(
+        self.weight:view(self.nOutputPlane,self.nInputPlane*self.kW*self.kH)
+        ,unfoldedInput
+    ):view(self.nOutputPlane,hOutputImage, wOutputImage)
+    
+    for c2 = 1, self.nOutputPlane do
+        self.output[c2]:add(self.bias[c2])
     end
-    return self.output
+    
+    return self.output 
 end
     
-    
+ 
 
-function DeformableConvolution:convolution(kernel, image, wOutputImage, hOutputImage)
-    
-    output_image = torch.Tensor(hOutputImage,wOutputImage):zero()
-    local image_framed = torch.Tensor(image:size(1)+2*self.padH,image:size(2)+2*self.padW):zero()
-    
-    for i = 1,image:size(1) do
-        for j=1,image:size(2) do
-            image_framed[i+self.padH][j+self.padW] = image[i][j]
-        end
-    end
-    
-    for i=1,wOutputImage do
-        for j=1,hOutputImage do
-            for k=0,self.kW-1 do
-                for l=0,self.kH-1 do
-                    output_image[j][i] = output_image[j][i] + image_framed[j+l][i+k]*kernel[l+1][k+1]
-                end
-            end
-        end
-    end
-    return output_image
-end
-
-function DeformableConvolution:rotateAbout180(input)
-    output = torch.Tensor(input:size())
-    for i = 1, input:size(1) do
-        for j = 1, input:size(2) do
-            for k = 1, input:size(3) do 
-                output[i][j][k] = input[i][input:size(2)-j+1][input:size(3)-k+1]
-            end
-        end
-    end
-    return output
-end
-        
-
-
-function DeformableConvolution:updateGradInput(input,gradOutput)
+function SlowSpatialConvolution:updateGradInput(input,gradOutput)
     self.gradInput = torch.Tensor(input:size()):zero()
-    for c1star = 1,self.nInputPlane do
-        for istar = 1, input:size(2) do
-            for jstar = 1,input:size(3) do
-                for i = 1,gradOutput:size(2) do
-                    for j = 1,gradOutput:size(3) do 
-                        for c2 =1,self.nOutputPlane do
-                            k = istar + 1 - i
-                            l = jstar + 1 - j
-                            if(1 <= l and l <= self.kW and 1 <= k and k <= self.kH) then
-                                self.gradInput[c1star][istar][jstar] = self.gradInput[c1star][istar][jstar] + gradOutput[c2][i][j]*self.weight[c2][c1star][k][l]
-                            end
-                        end
-                    end
-                end
-            end
-        end
+    weightRotated = slowspatialconvolution.rotate(self.weight)
+    fgradOutput = slowspatialconvolution.frame(gradOutput,self.kH-1,self.kW-1)
+    for c1star = 1, self.nInputPlane do
+        for c2 = 1, self.nOutputPlane do
+            self.gradInput[c1star]:add(torch.mm(
+                weightRotated[c2][c1star]:view(1,self.kW*self.kH)
+                ,slowspatialconvolution.im2col(
+                    fgradOutput[c2]:view(1,fgradOutput:size(2),fgradOutput:size(3))
+                    ,self.kH
+                    ,self.kW)
+            ):view(input:size(2),input:size(3)))
+        end    
     end
+    --print(gradOutput)
     return self.gradInput
 end
     
     
-function DeformableConvolution:accGradParameters(input,gradOutput, scale)
-    self.gradWeight:zero()
-    self.gradBias:zero()
+function SlowSpatialConvolution:accGradParameters(input,gradOutput, scale)
+    scale = scale or 1
+    local gradBias = torch.Tensor(self.gradBias:size()):zero()
+    local gradWeight = torch.Tensor(self.gradWeight:size()):zero()
+    
     ones = torch.Tensor(gradOutput:size(2),gradOutput:size(3)):fill(1)
     for i = 1, self.nOutputPlane do
-        self.gradBias[i] = gradOutput[i]:dot(ones)
+        gradBias[i] = gradBias[i] + gradOutput[i]:dot(ones)
     end
+                 
     for c1star = 1, self.nInputPlane do
         for c2star = 1, self.nOutputPlane do
-            for istar = 1, self.kH do
-                for jstar = 1, self.kW do
-                    for i = 1, gradOutput:size(2) do
-                        for j = 1, gradOutput:size(3) do
-                            self.gradWeight[c2star][c1star][istar][jstar] = self.gradWeight[c2star][c1star][istar][jstar] + gradOutput[c2star][i][j] * input[c1star][i+istar-1][j+jstar-1]
-                        end
-                    end
-                end
-            end
+            gradWeight[c2star][c1star]:add(torch.mm(
+                gradOutput[c2star]:view(1,gradOutput:size(2)*gradOutput:size(3))
+                ,slowspatialconvolution.im2col(
+                    input[c1star]:view(1,input:size(2),input:size(3))
+                    ,gradOutput:size(2)
+                    ,gradOutput:size(3))
+            ):view(self.kH,self.kW))
         end
     end
+    
+    self.gradBias:add(scale * gradBias)
+    self.gradWeight:add(scale * gradWeight)
+    
+    --print(gradOutput)
+    
 end
 
 

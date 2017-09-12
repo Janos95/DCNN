@@ -1,6 +1,6 @@
 
 cmake_minimum_required(VERSION 2.8)
-project(slowspatialconvolution)
+project(deformableconvolution)
 
 find_package(Torch)
 
@@ -10,12 +10,12 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
 if(${Torch_FOUND})
 	message(STATUS "Building torch module")
-	add_torch_package(slowspatialconvolution
-	ccode/SlowSpatialConvolution.cpp
+	add_torch_package(deformableconvolution
+	ccode/deformableconvolution.cpp
 		"init.lua"
-		"Slow Convolution"
+		"DeformableConvolution"
 	)
-	target_link_libraries(slowspatialconvolution
+	target_link_libraries(deformableconvolution
 		luaT TH
 	)
 endif()

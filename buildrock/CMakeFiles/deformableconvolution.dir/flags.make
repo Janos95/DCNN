@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_FLAGS =  -std=c++11 -march=native -O3 -DNDEBUG -fPIC  
 
-CXX_DEFINES = -Dslowspatialconvolution_EXPORTS
+CXX_DEFINES = -Ddeformableconvolution_EXPORTS
 
 CXX_INCLUDES = -I/home/cognitive/torch/install/include -I/home/cognitive/torch/install/include/TH -I/home/cognitive/DCNN 
 

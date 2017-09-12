@@ -33,27 +33,27 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so")
     file(RPATH_CHECK
-         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so"
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so"
          RPATH "$ORIGIN/../lib:/home/cognitive/torch/install/lib")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib" TYPE MODULE FILES "/home/cognitive/DCNN/buildrock/libslowspatialconvolution.so")
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib" TYPE MODULE FILES "/home/cognitive/DCNN/buildrock/libdeformableconvolution.so")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so")
     file(RPATH_CHANGE
-         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so"
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so"
          OLD_RPATH "/home/cognitive/torch/install/lib:::::::::::::::"
          NEW_RPATH "$ORIGIN/../lib:/home/cognitive/torch/install/lib")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lib/libslowspatialconvolution.so")
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lib/libdeformableconvolution.so")
     endif()
   endif()
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/slowspatialconvolution/0.1-0/lua/slowspatialconvolution" TYPE FILE FILES "/home/cognitive/DCNN/init.lua")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/luarocks/rocks/deformableconvolution/0.1-0/lua/deformableconvolution" TYPE FILE FILES "/home/cognitive/DCNN/init.lua")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

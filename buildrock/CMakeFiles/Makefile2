@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/cognitive/DCNN
 CMAKE_BINARY_DIR = /home/cognitive/DCNN/buildrock
 
 #=============================================================================
-# Target rules for target CMakeFiles/slowspatialconvolution.dir
+# Target rules for target CMakeFiles/deformableconvolution.dir
 
 # All Build rule for target.
-CMakeFiles/slowspatialconvolution.dir/all:
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/depend
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cognitive/DCNN/buildrock/CMakeFiles --progress-num=1,2 "Built target slowspatialconvolution"
-.PHONY : CMakeFiles/slowspatialconvolution.dir/all
+CMakeFiles/deformableconvolution.dir/all:
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/depend
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cognitive/DCNN/buildrock/CMakeFiles --progress-num=1,2 "Built target deformableconvolution"
+.PHONY : CMakeFiles/deformableconvolution.dir/all
 
 # Include target in all.
-all: CMakeFiles/slowspatialconvolution.dir/all
+all: CMakeFiles/deformableconvolution.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/slowspatialconvolution.dir/rule: cmake_check_build_system
+CMakeFiles/deformableconvolution.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/cognitive/DCNN/buildrock/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/slowspatialconvolution.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/deformableconvolution.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/cognitive/DCNN/buildrock/CMakeFiles 0
-.PHONY : CMakeFiles/slowspatialconvolution.dir/rule
+.PHONY : CMakeFiles/deformableconvolution.dir/rule
 
 # Convenience name for target.
-slowspatialconvolution: CMakeFiles/slowspatialconvolution.dir/rule
+deformableconvolution: CMakeFiles/deformableconvolution.dir/rule
 
-.PHONY : slowspatialconvolution
-
-# clean rule for target.
-CMakeFiles/slowspatialconvolution.dir/clean:
-	$(MAKE) -f CMakeFiles/slowspatialconvolution.dir/build.make CMakeFiles/slowspatialconvolution.dir/clean
-.PHONY : CMakeFiles/slowspatialconvolution.dir/clean
+.PHONY : deformableconvolution
 
 # clean rule for target.
-clean: CMakeFiles/slowspatialconvolution.dir/clean
+CMakeFiles/deformableconvolution.dir/clean:
+	$(MAKE) -f CMakeFiles/deformableconvolution.dir/build.make CMakeFiles/deformableconvolution.dir/clean
+.PHONY : CMakeFiles/deformableconvolution.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/deformableconvolution.dir/clean
 
 .PHONY : clean
 

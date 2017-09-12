@@ -13,9 +13,12 @@ end
 
 function almostIdentity:updateGradInput(input, gradOutput)
     self.i = self.i+1
-    print(self.i)
-   self.gradInput = gradOutput
-   return self.gradInput
+    if(self.i % 100 ==  0) then
+        print(self.i)
+    end
+    self.gradInput = gradOutput
+    --print(self.gradInput)
+    return self.gradInput
 end
 
 function almostIdentity:clearState()

@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/cognitive/DCNN/ccode/SlowSpatialConvolution.cpp
+/home/cognitive/DCNN/ccode/deformableconvolution.cpp
 TH.h
 -
 luaT.h
@@ -21,10 +21,12 @@ random
 -
 stdexcept
 -
-SlowSpatialConvolution.h
-/home/cognitive/DCNN/ccode/SlowSpatialConvolution.h
+iostream
+-
+deformableconvolution.h
+/home/cognitive/DCNN/ccode/deformableconvolution.h
 
-/home/cognitive/DCNN/ccode/SlowSpatialConvolution.h
+/home/cognitive/DCNN/ccode/deformableconvolution.h
 
 /home/cognitive/torch/install/include/TH/TH.h
 THGeneral.h
