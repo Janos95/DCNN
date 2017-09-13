@@ -1,17 +1,17 @@
 require 'nn'
 require 'paths'
 require 'image'
-require 'SlowSpatialConvolution'
+require 'DeformableConvolution'
 
 local nninit= require 'nninit'
 
-w = 32
-h = 32
+w = 5
+h = 4
 
-nInputPlane = 3
-nOutputPlane = 6
-kW = 5
-kH = 5
+nInputPlane = 2
+nOutputPlane = 3
+kW = 2
+kH = 2
 scale = 0.001
 
 weights = torch.rand(nOutputPlane,nInputPlane,kH,kW)
@@ -21,7 +21,7 @@ net = nn.Sequential()
 net:add(nn.SpatialConvolution(nInputPlane,nOutputPlane,kW,kH):init('weight',nninit.copy,weights):init('bias', nninit.copy,bias)) 
 
 net_new = nn.Sequential()
-net_new:add(nn.SlowSpatialConvolution(nInputPlane,nOutputPlane,kW,kH):init('weight',nninit.copy,weights):init('bias', nninit.copy,bias)) 
+net_new:add(nn.DeformableConvolution(nInputPlane,nOutputPlane,kW,kH):init('weight',nninit.copy,weights):init('bias', nninit.copy,bias)) 
 
 
 
@@ -33,34 +33,28 @@ classes = {'airplane', 'automobile', 'bird', 'cat',
 input = torch.rand(nInputPlane,h,w)
 gradOutput =torch.rand(nOutputPlane,h-kH+1,w-kW+1)
 
-
-
-net:updateParameters(scale)
-net_new:updateParameters(scale)
-
-
 local x = torch.Timer()
-for i = 1,100 do
+for i = 1,1 do
 output_new=net_new:forward(input)
-net_new:backward(input, gradOutput)
+--net_new:backward(input, gradOutput)
 end
 netNewElapsedTime = x:time().real
 netnewpara, netnewgradpara = net_new:getParameters()
-netnewgradinput = net_new:updateGradInput(input,gradOutput)
+--netnewgradinput = net_new:updateGradInput(input,gradOutput)
 
 x = torch.Timer()
-for i = 1,100 do
+for i = 1,1 do
 output = net:forward(input)
-net:backward(input,gradOutput)
+--net:backward(input,gradOutput)
 end
 netElapsedTime = x:time().real
 netpara, netgradpara = net:getParameters()
-netgradinput = net:updateGradInput(input,gradOutput)
+--netgradinput = net:updateGradInput(input,gradOutput)
 
 
-print(output-output_new)
-print((netnewgradpara - netgradpara):dot(netnewgradpara - netgradpara))
-print((netgradinput-netnewgradinput):dot(netgradinput-netnewgradinput))
+--print(output-output_new)
+--print((netnewgradpara - netgradpara):dot(netnewgradpara - netgradpara))
+--print((netgradinput-netnewgradinput):dot(netgradinput-netnewgradinput))
 
 
 print(string.format("elapsed time for new net: %.2f\n", netNewElapsedTime))

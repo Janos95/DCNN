@@ -17,6 +17,10 @@ cstring
 -
 cmath
 -
+math.h
+-
+assert.h
+-
 random
 -
 stdexcept
