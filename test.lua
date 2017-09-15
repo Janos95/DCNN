@@ -26,8 +26,8 @@ function mytest.DeformableConvolution()
    local function jacTests(module)
       -- stochastic
 
---       local err = nn.Jacobian.testJacobian(module, input)
---       mytester:assertlt(err, precision, 'error on gradient w.r.t. input ')
+      local err = nn.Jacobian.testJacobian(module, input)
+      mytester:assertlt(err, precision, 'error on gradient w.r.t. input ')
 
       local err = jac.testJacobianParameters(module, input, module.weight, module.gradWeight)
       mytester:assertlt(err , precision, 'error on gradient w.r.t. weight ')

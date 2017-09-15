@@ -5,13 +5,13 @@ require 'DeformableConvolution'
 
 local nninit= require 'nninit'
 
-w = 4
-h = 4
+w = 32
+h = 32
 
-nInputPlane = 1
-nOutputPlane = 1
-kW = 2
-kH = 2
+nInputPlane = 3
+nOutputPlane = 6
+kW = 5
+kH = 5
 scale = 0.001
 
 weights = torch.rand(nOutputPlane,nInputPlane,kH,kW)
@@ -34,28 +34,27 @@ input = torch.Tensor(nInputPlane,h,w):fill(1)
 gradOutput =torch.rand(nOutputPlane,h-kH+1,w-kW+1)
 
 local x = torch.Timer()
-for i = 1,1 do
+for i = 1,100 do
 output_new=net_new:forward(input)
---net_new:backward(input, gradOutput)
-net_new:accGradParameters(input,gradOutput)
+net_new:backward(input, gradOutput)
 end
 netNewElapsedTime = x:time().real
 netnewpara, netnewgradpara = net_new:getParameters()
---netnewgradinput = net_new:updateGradInput(input,gradOutput)
+netnewgradinput = net_new:updateGradInput(input,gradOutput)
 
--- x = torch.Timer()
--- for i = 1,1 do
--- output = net:forward(input)
--- --net:backward(input,gradOutput)
--- end
--- netElapsedTime = x:time().real
--- netpara, netgradpara = net:getParameters()
--- --netgradinput = net:updateGradInput(input,gradOutput)
+x = torch.Timer()
+for i = 1,100 do
+output = net:forward(input)
+net:backward(input,gradOutput)
+end
+netElapsedTime = x:time().real
+netpara, netgradpara = net:getParameters()
+netgradinput = net:updateGradInput(input,gradOutput)
 
 
-print(netnewgradpara)
+
 
 
 print(string.format("elapsed time for new net: %.2f\n", netNewElapsedTime))
---print(string.format("elapsed time for net: %.2f\n", netElapsedTime))
+print(string.format("elapsed time for net: %.2f\n", netElapsedTime))
 
