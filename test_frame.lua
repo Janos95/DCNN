@@ -6,6 +6,6 @@ input[1][2] = 2
 input[2][1] = 3
 input[2][2] = 4
 
-output = deformableconvolution.bilinearInterpolation(input:view(1,2,2),1,1,2)
+output = deformableconvolution.bilinearInterpolation(input:view(1,2,2),1,0.1,2.3)
 
 print(output)

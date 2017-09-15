@@ -1,87 +1,55 @@
 require 'nn'
-require 'paths'
-require 'image'
+require 'DeformableConvolution'
 require 'SlowSpatialConvolution'
-require 'almostIdentity'
-local nninit= require 'nninit'
 
-net = nn.Sequential()
-net:add(nn.almostIdentity())
-net:add(nn.SlowSpatialConvolution(3, 6, 5, 5):init('weight',nninit.normal,0,0.01):init('bias', nninit.constant,0.1))  -- 3 input image channels, 6 output channels, 5x5 convolution kernel
-net:add(nn.ReLU())                       -- non-linearity 
-net:add(nn.SpatialMaxPooling(2,2,2,2))     -- A max-pooling operation that looks at 2x2 windows and finds the max.
-net:add(nn.SlowSpatialConvolution(6, 16, 5, 5):init('weight',nninit.normal,0,0.01):init('bias', nninit.constant,0.1))
+local mytest = torch.TestSuite()
 
-net:add(nn.ReLU()) -- non-linearity 
-net:add(nn.SpatialMaxPooling(2,2,2,2))
-net:add(nn.View(16*5*5))                    -- reshapes from a 3D tensor of 16x5x5 into 1D tensor of 16*5*5
-net:add(nn.Linear(16*5*5, 120))             -- fully connected layer (matrix multiplication between input and weights)
-net:add(nn.ReLU())                       -- non-linearity 
-net:add(nn.Linear(120, 84))
-net:add(nn.ReLU())                       -- non-linearity 
-net:add(nn.Linear(84, 10))                   
-net:add(nn.LogSoftMax())     -- converts the output to a log-probability. 
+local mytester = torch.Tester()
 
-        
-print('Lenet5\n' .. net:__tostring());
+local precision = 1e-5
+local jac = nn.Jacobian
 
 
-trainset = torch.load('cifar10-train-normalized.t7')
-testset = torch.load('cifar10-test-normalized.t7')
-classes = {'airplane', 'automobile', 'bird', 'cat',
-           'deer', 'dog', 'frog', 'horse', 'ship', 'truck'}
 
+function mytest.DeformableConvolution()
+   local from = math.random(1,5)
+   local to = math.random(1,5)
+   local ki = math.random(1,5)
+   local kj = math.random(1,5)
+   local outi = math.random(5,7)
+   local outj = math.random(5,7)
+   local ini = (outi-1)+ki
+   local inj = (outj-1)+kj
+   local module = nn.DeformableConvolution(from, to, ki, kj)
+   local input = torch.Tensor(from, inj, ini):zero()
 
-setmetatable(trainset, 
-    {__index = function(t, i) 
-                    return {t.data[i], t.label[i]} 
-                end}
-);
-trainset.data = trainset.data:double() -- convert the data from a ByteTensor to a DoubleTensor.
+   local function jacTests(module)
+      -- stochastic
 
-function trainset:size() 
-    return self.data:size(1) 
-end
+--       local err = nn.Jacobian.testJacobian(module, input)
+--       mytester:assertlt(err, precision, 'error on gradient w.r.t. input ')
 
--- input = torch.rand(3,32,32)
--- gradOutput = torch.rand(10)
--- 
--- x = torch.Timer()
--- for i = 1,1 do
---     output = net:forward(input)
---     net:backward(input,gradOutput)
--- end
--- netElapsedTime = x:time().real
--- --netpara, netgradpara = net:getParameters()
--- netgradinput = net:updateGradInput(input,gradOutput)
--- 
--- --print(netgradinput)
+      local err = jac.testJacobianParameters(module, input, module.weight, module.gradWeight)
+      mytester:assertlt(err , precision, 'error on gradient w.r.t. weight ')
 
+      if module.bias then
+         local err = jac.testJacobianParameters(module, input, module.bias, module.gradBias)
+         mytester:assertlt(err , precision, 'error on gradient w.r.t. bias ')
+      end
 
-criterion = nn.ClassNLLCriterion()
+      local err = jac.testJacobianUpdateParameters(module, input, module.weight)
+      mytester:assertlt(err , precision, 'error on gradient w.r.t. weight [direct update] ')
 
-trainer = nn.StochasticGradient(net, criterion)
-trainer.learningRate = 0.001
-trainer.maxIteration = 5 
-        
-trainer:train(trainset)
+      if module.bias then
+         local err = jac.testJacobianUpdateParameters(module, input, module.bias)
+         mytester:assertlt(err , precision, 'error on gradient w.r.t. bias [direct update] ')
+      end
 
-testset.data = testset.data:double()   -- convert from Byte tensor to Double tensor
-
-correct = 0
-for i=1,10000 do
-    local groundtruth = testset.label[i]
-    local prediction = net:forward(testset.data[i])
-    local confidences, indices = torch.sort(prediction, true) 
-    if groundtruth == indices[1] then
-        correct = correct + 1
     end
+                      
+   jacTests(module)
+
 end
-
-print(correct, 100*correct/10000 .. ' % ')
-
-
-
-
-
-
+    
+mytester:add(mytest)
+mytester:run()
