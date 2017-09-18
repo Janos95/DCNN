@@ -51,7 +51,7 @@ netElapsedTime = x:time().real
 netpara, netgradpara = net:getParameters()
 netgradinput = net:updateGradInput(input,gradOutput)
 
-
+print(netgradinput - netnewgradinput)
 
 
 

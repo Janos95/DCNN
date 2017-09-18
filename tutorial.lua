@@ -1,16 +1,16 @@
 require 'nn'
 require 'paths'
 require 'image'
-require 'SlowSpatialConvolution'
+require 'DeformableConvolution'
 require 'almostIdentity'
 local nninit= require 'nninit'
 
 net = nn.Sequential()
 net:add(nn.almostIdentity())
-net:add(nn.SlowSpatialConvolution(3, 6, 5, 5):init('weight',nninit.normal,0,0.01):init('bias', nninit.constant,0.1))  -- 3 input image channels, 6 output channels, 5x5 convolution kernel
+net:add(nn.DeformableConvolution(3, 6, 5, 5):init('weight',nninit.normal,0,0.01):init('bias', nninit.constant,0.1))  -- 3 input image channels, 6 output channels, 5x5 convolution kernel
 net:add(nn.ReLU())                       -- non-linearity 
 net:add(nn.SpatialMaxPooling(2,2,2,2))     -- A max-pooling operation that looks at 2x2 windows and finds the max.
-net:add(nn.SlowSpatialConvolution(6, 16, 5, 5):init('weight',nninit.normal,0,0.01):init('bias', nninit.constant,0.1))
+net:add(nn.DeformableConvolution(6, 16, 5, 5):init('weight',nninit.normal,0,0.01):init('bias', nninit.constant,0.1))
 
 net:add(nn.ReLU()) -- non-linearity 
 net:add(nn.SpatialMaxPooling(2,2,2,2))
@@ -62,7 +62,7 @@ criterion = nn.ClassNLLCriterion()
 
 trainer = nn.StochasticGradient(net, criterion)
 trainer.learningRate = 0.001
-trainer.maxIteration = 5 
+trainer.maxIteration = 2 
         
 trainer:train(trainset)
 
