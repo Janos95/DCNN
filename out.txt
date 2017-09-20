@@ -1,0 +1,407 @@
+==27012== Memcheck, a memory error detector
+==27012== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==27012== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==27012== Command: /home/cognitive/torch/install/bin/luajit -e package.path="/home/cognitive/.luarocks/share/lua/5.1/?.lua;/home/cognitive/.luarocks/share/lua/5.1/?/init.lua;/home/cognitive/torch/install/share/lua/5.1/?.lua;/home/cognitive/torch/install/share/lua/5.1/?/init.lua;"..package.path;\ package.cpath="/home/cognitive/.luarocks/lib/lua/5.1/?.so;/home/cognitive/torch/install/lib/lua/5.1/?.so;"..package.cpath -e local\ k,l,_=pcall(require,"luarocks.loader")\ _=k\ and\ l.add_context("trepl","scm-1") /home/cognitive/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th test.lua
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x472EE1: luaL_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4732CD: luaopen_package (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x475DC8: luaL_openlibs (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x405F2A: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x472EE1: luaL_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x473333: luaopen_package (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x475DC8: luaL_openlibs (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x405F2A: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x472EE1: luaL_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x474AD1: searchpath (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x474FC3: lj_cf_package_loader_lua (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464D96: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x47465F: lj_cf_string_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40614A: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x472EE1: luaL_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4736C4: lj_cf_package_loader_preload (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464D96: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x472EE1: luaL_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x474C01: searchpath (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x474FC3: lj_cf_package_loader_lua (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464D96: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x463B6B: lua_getfield (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x695ECBD: luaT_getinnerparent (in /home/cognitive/torch/install/lib/libluaT.so.0)
+==27012==    by 0x695F6C6: luaT_lua_newmetatable (in /home/cognitive/torch/install/lib/libluaT.so.0)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x695CF78: luaT_newlocalmetatable (in /home/cognitive/torch/install/lib/libluaT.so.0)
+==27012==    by 0x695D00A: luaT_newmetatable (in /home/cognitive/torch/install/lib/libluaT.so.0)
+==27012==    by 0x65F6C69: torch_File_init (in /home/cognitive/torch/install/lib/lua/5.1/libtorch.so)
+==27012==    by 0x662D48D: luaopen_libtorch (in /home/cognitive/torch/install/lib/lua/5.1/libtorch.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x63B4D71: path_require (in /home/cognitive/torch/install/lib/lua/5.1/libpaths.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x472EE1: luaL_gsub (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x473959: ll_loadfunc (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4750BB: lj_cf_package_loader_c (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464D96: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x63B5E0F: lua_basename (in /home/cognitive/torch/install/lib/lua/5.1/libpaths.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x417373: lj_str_new (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x45F3DA: lua_pushlstring (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x63B56BD: lua_dirname (in /home/cognitive/torch/install/lib/lua/5.1/libpaths.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x464FA9: lj_cf_package_require (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+Running 1 test
+[0;36m1/1 [0mDeformableConvolution ............................................... [[0;36mWAIT[0m]==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C65047: projection(double, double) (deformableconvolution.cpp:23)
+==27012==    by 0x9C651B8: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:57)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C65059: projection(double, double) (deformableconvolution.cpp:25)
+==27012==    by 0x9C651B8: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:57)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C65047: projection(double, double) (deformableconvolution.cpp:23)
+==27012==    by 0x9C6520A: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:58)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C65059: projection(double, double) (deformableconvolution.cpp:25)
+==27012==    by 0x9C6520A: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:58)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C6525D: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:63)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C65286: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:65)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C653D9: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:78)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C653E8: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:78)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C653F7: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:78)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x9C65406: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:78)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Use of uninitialised value of size 8
+==27012==    at 0x9C65626: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:85)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Use of uninitialised value of size 8
+==27012==    at 0x9C65688: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:86)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Use of uninitialised value of size 8
+==27012==    at 0x9C656EE: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:87)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Use of uninitialised value of size 8
+==27012==    at 0x9C65758: bilinearInterp(THDoubleTensor*, THLongTensor*, THDoubleTensor*, long, double, double, unsigned long, unsigned long, long) (deformableconvolution.cpp:88)
+==27012==    by 0x9C662C3: im2col(lua_State*) (deformableconvolution.cpp:202)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x45F344: lua_pushnumber (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x6606802: torch_DoubleTensor___index__ (in /home/cognitive/torch/install/lib/lua/5.1/libtorch.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x695CAB5: luaT_mt__index (in /home/cognitive/torch/install/lib/libluaT.so.0)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x45D7B7: lua_isnumber (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x6631A68: m_torch_DoubleTensor_add (in /home/cognitive/torch/install/lib/lua/5.1/libtorch.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== Conditional jump or move depends on uninitialised value(s)
+==27012==    at 0x45EA72: lua_tonumber (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x6631C5F: m_torch_DoubleTensor_add (in /home/cognitive/torch/install/lib/lua/5.1/libtorch.so)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x466CA0: lj_cf_dofile (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x4659AC: lua_pcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x40686E: pmain (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x477979: lj_BC_FUNCC (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x465A26: lua_cpcall (in /home/cognitive/torch/install/bin/luajit)
+==27012==    by 0x404543: main (in /home/cognitive/torch/install/bin/luajit)
+==27012== 
+==27012== 
+==27012== More than 10000000 total errors detected.  I'm not reporting any more.
+==27012== Final error counts will be inaccurate.  Go fix your program!
+==27012== Rerun with --error-limit=no to disable this cutoff.  Note
+==27012== that errors may occur in your program without prior warning from
+==27012== Valgrind, because errors are no longer being displayed.
+==27012== 
+[0;36m1/1 [0mDeformableConvolution ............................................... [[0;35mERROR[0m]
+/home/cognitive/torch/install/bin/luajit: ...e/cognitive/torch/install/share/lua/5.1/torch/Tester.lua:363: An error was found while running tests!
+stack traceback:
+	[C]: in function 'assert'
+	...e/cognitive/torch/install/share/lua/5.1/torch/Tester.lua:363: in function 'run'
+	test.lua:55: in main chunk
+	[C]: in function 'dofile'
+	...tive/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:150: in main chunk
+	[C]: at 0x00405d50
+Completed 0 asserts in 1 test with [0;32m0 failures[0m and [0;35m1 error[0m
+--------------------------------------------------------------------------------
+DeformableConvolution
+ Function call failed
+...ve/torch/install/share/lua/5.1/nn/SpatialConvolution.lua:58: attempt to index field 'weight' (a nil value)
+stack traceback:
+	...ve/torch/install/share/lua/5.1/nn/SpatialConvolution.lua:58: in function 'backCompatibility'
+	...ve/torch/install/share/lua/5.1/nn/SpatialConvolution.lua:115: in function 'accGradParameters'
+	./DeformableConvolution.lua:158: in function 'accGradParameters'
+	/home/cognitive/torch/install/share/lua/5.1/nn/Jacobian.lua:22: in function 'backward'
+	/home/cognitive/torch/install/share/lua/5.1/nn/Jacobian.lua:235: in function 'testJacobian'
+	test.lua:29: in function 'jacTests'
+	test.lua:50: in function <test.lua:14>
+	[C]: in function 'xpcall'
+	...e/cognitive/torch/install/share/lua/5.1/torch/Tester.lua:477: in function '_pcall'
+	...e/cognitive/torch/install/share/lua/5.1/torch/Tester.lua:436: in function '_run'
+	...e/cognitive/torch/install/share/lua/5.1/torch/Tester.lua:355: in function 'run'
+	test.lua:55: in main chunk
+	[C]: in function 'dofile'
+	...tive/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:150: in main chunk
+	[C]: at 0x00405d50
+
+--------------------------------------------------------------------------------
+==27012== 
+==27012== HEAP SUMMARY:
+==27012==     in use at exit: 236,927 bytes in 1,556 blocks
+==27012==   total heap usage: 37,124 allocs, 35,568 frees, 16,692,651 bytes allocated
+==27012== 
+==27012== LEAK SUMMARY:
+==27012==    definitely lost: 0 bytes in 0 blocks
+==27012==    indirectly lost: 0 bytes in 0 blocks
+==27012==      possibly lost: 2,352 bytes in 7 blocks
+==27012==    still reachable: 234,575 bytes in 1,549 blocks
+==27012==         suppressed: 0 bytes in 0 blocks
+==27012== Rerun with --leak-check=full to see details of leaked memory
+==27012== 
+==27012== For counts of detected and suppressed errors, rerun with: -v
+==27012== Use --track-origins=yes to see where uninitialised values come from
+==27012== ERROR SUMMARY: 10000000 errors from 27 contexts (suppressed: 0 from 0)

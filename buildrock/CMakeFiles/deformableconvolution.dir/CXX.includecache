@@ -27,6 +27,8 @@ stdexcept
 -
 iostream
 -
+algorithm
+-
 deformableconvolution.h
 /home/cognitive/DCNN/ccode/deformableconvolution.h
 
