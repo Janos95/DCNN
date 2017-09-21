@@ -1,25 +1,48 @@
 require 'nn'
 require 'paths'
 require 'image'
-require 'SlowSpatialConvolution'
+require 'deformableconvolution'
 local nninit= require 'nninit'
-require 'slowspatialconvolution'
-
-net = nn.Sequential()
-net:add(nn.SpatialConvolution(3,6,4,4):init('weight',nninit.constant,1):init('bias', nninit.constant,0)) -- 3 input image channels, 6 output channels, 5x5 
-
-net_new = nn.Sequential()
-net_new:add(nn.SlowSpatialConvolution(3,6,4,4):init('weight',nninit.constant,1):init('bias', nninit.constant,0)) -- 3 input image channels, 6 output channels, 5x5
 
 
 
---trainset = torch.load('cifar10-train-normalized.t7')
---testset = torch.load('cifar10-test-normalized.t7')
-classes = {'airplane', 'automobile', 'bird', 'cat',
-           'deer', 'dog', 'frog', 'horse', 'ship', 'truck'}
            
-input = torch.rand(1,1,4,5)
+input = torch.DoubleTensor(1,2,2)
 
+input[1][1][1] = 1
+input[1][1][2] = 2
+input[1][2][1] = 3
+input[1][2][2] = 4
+
+
+epsilon = 10e-5
+
+del_x = 
+(deformableconvolution.bilinearInterpolation(input,torch.LongTensor(),torch.Tensor(),1,2.5,2.5+epsilon,0,0,0)-
+deformableconvolution.bilinearInterpolation(input,torch.LongTensor(),torch.Tensor(),1,2.5,2.5-epsilon,0,0,0))/(2*epsilon
+)
+
+del_y = 
+(deformableconvolution.bilinearInterpolation(input,torch.LongTensor(),torch.Tensor(),1,2.5+epsilon,2.5,0,0,0)-
+deformableconvolution.bilinearInterpolation(input,torch.LongTensor(),torch.Tensor(),1,2.5-epsilon,2.5,0,0,0))/(2*
+epsilon )
+
+w0 = 0
+w1 = 0
+w2 = 1
+w3 = 1
+
+vy = -input[1][1][1]*w1 - input[1][1][2]*w3
+ +input[1][2][1]*w1
++input[1][2][2]*w3
+
+vx = -input[1][1][1]*w0 + input[1][1][2]*w0
+ -input[1][2][1]*w2
++input[1][2][2]*w2
+
+
+print(del_x, vx)
+print(del_y,vy)
 
 
 

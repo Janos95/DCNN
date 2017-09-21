@@ -12,13 +12,14 @@ function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
    self.nOutputPlane = nOutputPlane
    self.kW = kW
    self.kH = kH
-      
-
-   self.weight = torch.Tensor(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW)
-   self.bias = torch.Tensor(nOutputPlane+2*kH*kW)
+     
+   self.randomTensor = torch.rand(2,3,3,6,6)
    
-   self.gradWeight = torch.Tensor(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW)
-   self.gradBias = torch.Tensor(nOutputPlane+2*kH*kW)
+   self.weight = torch.randn(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW)
+   self.bias = torch.Tensor(nOutputPlane+2*kH*kW):zero()
+   
+   self.gradWeight = torch.Tensor(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW):zero()
+   self.gradBias = torch.Tensor(nOutputPlane+2*kH*kW):zero()
    
    self.weightDC = torch.Tensor(self.weight:storage(),1,torch.LongStorage{nOutputPlane,nInputPlane,kH,kW})
    self.biasDC = torch.Tensor(self.bias:storage(),1,torch.LongStorage{nOutputPlane})
@@ -35,7 +36,7 @@ nn.SpatialConvolution(nInputPlane,2*kH*kW,kW,kH)
    self.offsetPredictor.weight= 
 torch.Tensor(self.weight:storage(),1+nOutputPlane*nInputPlane*kH*kW,torch.LongStorage{2*kH*kW,nInputPlane,kH,kW})
    self.offsetPredictor.bias 
-=torch.Tensor(self.bias:storage(),1+nOutputPlane,torch.LongStorage{2*kH*kW})  
+=torch.Tensor(self.bias:storage(),1+nOutputPlane,torch.LongStorage{2*kH*kW})
 
    self.offsetPredictor.gradWeight = 
 torch.Tensor(self.gradWeight:storage(),1+nOutputPlane*nInputPlane*kH*kW,torch.LongStorage{2*kH*kW,nInputPlane,kH,kW})
@@ -46,6 +47,7 @@ torch.Tensor(self.gradBias:storage(),1+nOutputPlane,torch.LongStorage{2*kH*kW})
 end
 
 function DeformableConvolution:updateOutput(input)
+    
     --print('updateOutput')
     local wOutputImage = input:size(3)-self.kW+1
     local hOutputImage = input:size(2)-self.kH+1
@@ -65,6 +67,10 @@ hOutputImage*wOutputImage,3)
         ,self.kW
         ,hOutputImage
         ,wOutputImage)
+        
+
+    
+    
 
     assert(input:isContiguous())
     --unfoldedInput = torch.rand(self.nInputPlane*self.kH*self.kW,hOutputImage*wOutputImage)
@@ -93,10 +99,17 @@ function DeformableConvolution:updateGradInput(input,gradOutput)
 gradOutput:size(2)*gradOutput:size(3)))
 --     print(self.nInputPlane, self.nOutputPlane, self.kW, self.kH)
 --     print(gradIm2col:size())
+    gradOffset = deformableconvolution.grad_offset(
+                            input,
+                            offsets,
+                            self.weightDC,
+                            gradOutput,
+                            self.bufferIndices,
+                            self.bufferInterpolationWeights)
     self.gradInput = 
 deformableconvolution.update_grad_input(gradIm2col,self.bufferIndices, 
 self.bufferInterpolationWeights, input:size(1), input:size(2), 
-input:size(3)) 
+input:size(3)):add(self.offsetPredictor:updateGradInput(input,gradOffset))
 
     return self.gradInput
 end

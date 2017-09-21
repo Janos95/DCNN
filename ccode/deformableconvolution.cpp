@@ -27,6 +27,11 @@ inline double projection(double x, double range){
     return x;
 }
 
+static double isPositive(double a){
+    if(a >= 0) return 1.0;
+    return 0.0;
+}
+
 /* @brief interpolation using the formula (3) + (4) from [1].
  * We project the point (px,py) onto the image, interpolate the projected point
  * (px_projected,py_projected) and then multiply by 
@@ -75,12 +80,13 @@ static double bilinearInterp(THDoubleTensor* input, THLongTensor* bi, THDoubleTe
 
     
     
-    if(px_projected != px or py_projected != py){
-        w[0] *= std::max(0.0, 1-std::abs(py-py_projected));
-        w[1] *= std::max(0.0, 1-std::abs(px-px_projected));
-        w[2] *= std::max(0.0, 1-std::abs(py-py_projected));
-        w[3] *= std::max(0.0, 1-std::abs(px-px_projected));
-    }
+//     if(px_projected != px or py_projected != py){
+//         w[0] *= std::max(0.0, 1-std::abs(py-py_projected));
+//         w[1] *= std::max(0.0, 1-std::abs(px-px_projected));
+//         w[2] *= std::max(0.0, 1-std::abs(py-py_projected));
+//         w[3] *= std::max(0.0, 1-std::abs(px-px_projected));
+//     }
+
     
     retval = w[0]*w[1]*data[s0*c+s1*ay+s2*ax]
             +w[0]*w[3]*data[s0*c+s1*ay+s2*(ax+1)]
@@ -198,6 +204,9 @@ static int im2col(lua_State *L)
                         assert(1 < a);
                         y_offset = offsets_data[0*t0+l*t1+k*t2+i*t3+j*t4];
                         x_offset = offsets_data[1*t0+l*t1+k*t2+i*t3+j*t4];
+                        if(y_offset >= 5000 or x_offset >= 5000)
+                            std::cout << y_offset << " " << x_offset << std::endl;
+                        assert(y_offset < 5000 and x_offset < 5000);
                         odata[(c*kW*kH+l*kW+k)*s0+s1*(i*wOutputImage+j)] =
                             bilinearInterp(image, 
                                            bi, 
@@ -297,11 +306,6 @@ static int update_grad_input(lua_State *L){
     return 1;
 }
 
-static double signum(double a){
-    if(a >= 0) return 1.0;
-    return -1.0;
-}
-
 static int grad_offset(lua_State *L){
     
     THDoubleTensor *input = (THDoubleTensor*)luaT_checkudata(L, 1, "torch.DoubleTensor");
@@ -381,46 +385,70 @@ static int grad_offset(lua_State *L){
                             long ay = bi_data[r0*(c1*kH*kW+k*kW+l) + r1*(i*W_out+j) + 1*r2];
                             long ax = bi_data[r0*(c1*kH*kW+k*kW+l) + r1*(i*W_out+j) + 2*r2];
                             assert(c == c1);
+                            double px = j+l+offset_data[t0*1+t1*k+t2*l+t3*i+t4*j];
+                            double py = i+k+offset_data[t0*0+t1*k+t2*l+t3*i+t4*j];
+    
+
+                            
                             double w0, w1, w2, w3;
                             w0 = bw_data[q0*(c1*kH*kW+k*kW+l) + q1*(i*W_out+j) + 0*q2];
                             w1 = bw_data[q0*(c1*kH*kW+k*kW+l) + q1*(i*W_out+j) + 1*q2];
                             w2 = bw_data[q0*(c1*kH*kW+k*kW+l) + q1*(i*W_out+j) + 2*q2];
                             w3 = bw_data[q0*(c1*kH*kW+k*kW+l) + q1*(i*W_out+j) + 3*q2];
-                            double vx = 0;
-                            vx += input_data[c1*s0 + ay*s1 + ax*s2]
-                                    *w1
-                                    *signum(ay-i-k-offset_data[0*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            vx += input_data[c1*s0 + ay*s1 + (ax+1)*s2]
-                                    *w3
-                                    *signum(ay-i-k-offset_data[0*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            vx += input_data[c1*s0 + (ay+1)*s1 + ax*s2]
-                                    *w1
-                                    *signum((ay+1)-i-k-offset_data[0*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            vx += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]
-                                    *w3
-                                    *signum((ay+1)-i-k-offset_data[0*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            double vy = 0;
-                            vy += input_data[c1*s0 + ay*s1 + ax*s2]
-                                    *w0
-                                    *signum(ax-j-l-offset_data[1*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            vy += input_data[c1*s0 + ay*s1 + (ax+1)*s2]
-                                    *w0
-                                    *signum((ax+1)-j-l-offset_data[1*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            vy += input_data[c1*s0 + (ay+1)*s1 + ax*s2]
-                                    *w2
-                                    *signum(ax-j-l-offset_data[1*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
-                            vy += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]
-                                    *w2
-                                    *signum((ax+1)-j-l-offset_data[1*t0 + k*t1 + l*t2 + i*t3 + j*t4]);
+                            
+//                             double px_projected = projection(px,double(W-1));
+//                             double py_projected = projection(py,double(H-1));
+//                             assert(w0 == 1 - (py_projected - ay));
+//                             assert(w1 == 1 - (px_projected - ax));
+//                             assert(w2 == 1 - ((ay+1)-py_projected));
+//                             assert(w3 == 1 - ((ax+1)-px_projected));
+//                             
+//                             double vx = 0;
+//                             double vy = 0;
+//                             if(px != px_projected){
+//                                 vy -= input_data[c1*s0 + ay*s1 + ax*s2]*w1;
+//                                 vy -= input_data[c1*s0 + ay*s1 + (ax+1)*s2]*w3;
+//                                 vy += input_data[c1*s0 + (ay+1)*s1 + ax*s2]*w1;
+//                                 vy += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]*w3;
+//                             }
+//                             
+//                             if(py != py_projected){
+//                                 vx -= input_data[c1*s0 + ay*s1 + ax*s2]*w0;
+//                                 vx += input_data[c1*s0 + ay*s1 + (ax+1)*s2]*w0;
+//                                 vx -= input_data[c1*s0 + (ay+1)*s1 + ax*s2]*w2;
+//                                 vx += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]*w2;
+//                             }
+//                             
+//                             if(px != projection(px,double(W-1)) and py != projection(py,double(H-1))){
+//                                 vx = 0;
+//                                 vy = 0;
+//                             }
+                            
+                            double epsilon = .00001;
+                            double vx=
+(bilinearInterp(input,NULL,NULL,c1,py,px+epsilon,0,0,0)
+-bilinearInterp(input,NULL,NULL,c1,py,px-epsilon,0,0,0))
+/(2*epsilon);
+                            
+                            double vy =  
+(bilinearInterp(input,NULL,NULL,c1,py+epsilon,px,0,0,0)
+-bilinearInterp(input,NULL,NULL,c1,py-epsilon,px,0,0,0))
+/(2*epsilon);
+//                             double err_y = vy_correct - vy;
+//                             double err_x = vx_correct - vx;
+//                             if(err_x > .01 or err_y > .01){
+//                                 std::cout << "the error is " << err_y << " " << err_x << std::endl;
+//                                 std::cout << "the location is " << py << " " << px << std::endl;
+//                             }
                                    
                             gradOffset_data[(0*kH*kW+k*kW+l)*v0 + i*v1 + j*v2]
                                 += gradOutput_data[c2*z0 + i*z1 + j*z2]
                                     *weight_data[c2*u0 + c1*u1 + k*u2 + l*u3]
-                                    *vx;
+                                    *vy;
                             gradOffset_data[(1*kH*kW+k*kW+l)*v0 + i*v1 + j*v2]
                                 += gradOutput_data[c2*z0 + i*z1 + j*z2]
                                     *weight_data[c2*u0 + c1*u1 + k*u2 + l*u3]
-                                    *vy;
+                                    *vx;
                         }
                     }
                 }
