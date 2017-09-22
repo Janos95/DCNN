@@ -168,12 +168,42 @@ function DeformableConvolution:accGradParameters(input, gradOutput, scale)
                             gradOutput,
                             self.bufferIndices,
                             self.bufferInterpolationWeights)
-                                                
+                                                                  
+
+    --we remember the old ones and then set pointers of offsetPredictor.gradWeight/self.gradWeight 
+    --and offsetPredictor.gradBias/self.gradBias
+    --s.t. accUpdateGradParameters uses the right storage.
+    --If accUpdateGradParameters is not called, nothing happens.
+    
+    local gradWeightOPOrigin = self.offsetPredictor.gradWeight
+    local gradBiasOPOrigin = self.offsetPredictor.gradBias
+        
+    local gradWeightDCOrigin = self.gradWeightDC
+    local gradBiasDCOrigin = self.gradBiasDC
+
+    
+         self.offsetPredictor.gradWeight = 
+torch.Tensor(self.gradWeight:storage(),1+self.nOutputPlane*self.nInputPlane*self.kH*self.kW,torch.LongStorage{2*self.kH*
+self.kW , self.nInputPlane , self.kH , self.kW } )
+   self.offsetPredictor.gradBias = 
+torch.Tensor(self.gradBias:storage(),1+self.nOutputPlane,torch.LongStorage{2*self.kH*self.kW})         
+  
+    self.gradWeightDC = 
+torch.Tensor(self.gradWeight:storage(),1,torch.LongStorage{self.nOutputPlane,self.nInputPlane,self.kH,self.kW})
+   self.gradBiasDC = torch.Tensor(self.gradBias:storage(),1,torch.LongStorage{self.nOutputPlane})
+   
     self.offsetPredictor:accGradParameters(input, gradOffset, scale)
-                            
     self.gradBiasDC:add(scale, gradBiasDC)
     self.gradWeightDC:add(scale, gradWeightDC)
-       
+
+    
+    --mapping the pointers back
+    self.offsetPredictor.gradWeight = gradWeightOPOrigin 
+    self.offsetPredictor.gradBias = gradBiasOPOrigin
+        
+    self.gradWeightDC = gradWeightDCOrigin
+    self.gradBiasDC = gradBiasDCOrigin    
+   
 end
 
 

@@ -97,7 +97,7 @@ function mytest5.AccGradBiasDirect()
       local err,diff = jac.testJacobianUpdateParameters(module, input, module.bias)
          mytester:assertlt(err , precision, 'error on gradient w.r.t. bias [direct update] ')
      if( err >= precision) then
-          print(diff)
+          --print(diff)
       end
     end
                       
