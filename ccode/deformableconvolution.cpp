@@ -396,47 +396,46 @@ static int grad_offset(lua_State *L){
                             w2 = bw_data[q0*(c1*kH*kW+k*kW+l) + q1*(i*W_out+j) + 2*q2];
                             w3 = bw_data[q0*(c1*kH*kW+k*kW+l) + q1*(i*W_out+j) + 3*q2];
                             
-//                             double px_projected = projection(px,double(W-1));
-//                             double py_projected = projection(py,double(H-1));
-//                             assert(w0 == 1 - (py_projected - ay));
-//                             assert(w1 == 1 - (px_projected - ax));
-//                             assert(w2 == 1 - ((ay+1)-py_projected));
-//                             assert(w3 == 1 - ((ax+1)-px_projected));
-//                             
-//                             double vx = 0;
-//                             double vy = 0;
-//                             if(px != px_projected){
-//                                 vy -= input_data[c1*s0 + ay*s1 + ax*s2]*w1;
-//                                 vy -= input_data[c1*s0 + ay*s1 + (ax+1)*s2]*w3;
-//                                 vy += input_data[c1*s0 + (ay+1)*s1 + ax*s2]*w1;
-//                                 vy += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]*w3;
-//                             }
-//                             
-//                             if(py != py_projected){
-//                                 vx -= input_data[c1*s0 + ay*s1 + ax*s2]*w0;
-//                                 vx += input_data[c1*s0 + ay*s1 + (ax+1)*s2]*w0;
-//                                 vx -= input_data[c1*s0 + (ay+1)*s1 + ax*s2]*w2;
-//                                 vx += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]*w2;
-//                             }
-//                             
-//                             if(px != projection(px,double(W-1)) and py != projection(py,double(H-1))){
-//                                 vx = 0;
-//                                 vy = 0;
-//                             }
+                            double px_projected = projection(px,double(W-1));
+                            double py_projected = projection(py,double(H-1));
+                            assert(w0 == 1 - (py_projected - ay));
+                            assert(w1 == 1 - (px_projected - ax));
+                            assert(w2 == 1 - ((ay+1)-py_projected));
+                            assert(w3 == 1 - ((ax+1)-px_projected));
                             
-                            double epsilon = .00001;
-                            double vx=
-(bilinearInterp(input,NULL,NULL,c1,py,px+epsilon,0,0,0)
--bilinearInterp(input,NULL,NULL,c1,py,px-epsilon,0,0,0))
-/(2*epsilon);
+                            double vx = 0;
+                            double vy = 0;
+                            vy -= input_data[c1*s0 + ay*s1 + ax*s2]*w1;
+                            vy -= input_data[c1*s0 + ay*s1 + (ax+1)*s2]*w3;
+                            vy += input_data[c1*s0 + (ay+1)*s1 + ax*s2]*w1;
+                            vy += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]*w3;
                             
-                            double vy =  
-(bilinearInterp(input,NULL,NULL,c1,py+epsilon,px,0,0,0)
--bilinearInterp(input,NULL,NULL,c1,py-epsilon,px,0,0,0))
-/(2*epsilon);
+                            vx -= input_data[c1*s0 + ay*s1 + ax*s2]*w0;
+                            vx += input_data[c1*s0 + ay*s1 + (ax+1)*s2]*w0;
+                            vx -= input_data[c1*s0 + (ay+1)*s1 + ax*s2]*w2;
+                            vx += input_data[c1*s0 + (ay+1)*s1 + (ax+1)*s2]*w2;
+                            
+                            if(py != py_projected){
+                                vy = 0;
+                            }
+                            
+                            if(px != px_projected){
+                                vx = 0;
+                            }
+                            
+//                             double epsilon = .00001;
+//                             double vx_correct=
+// (bilinearInterp(input,NULL,NULL,c1,py,px+epsilon,0,0,0)
+// -bilinearInterp(input,NULL,NULL,c1,py,px-epsilon,0,0,0))
+// /(2*epsilon);
+//                             
+//                             double vy_correct =  
+// (bilinearInterp(input,NULL,NULL,c1,py+epsilon,px,0,0,0)
+// -bilinearInterp(input,NULL,NULL,c1,py-epsilon,px,0,0,0))
+// /(2*epsilon);
 //                             double err_y = vy_correct - vy;
 //                             double err_x = vx_correct - vx;
-//                             if(err_x > .01 or err_y > .01){
+//                             if(err_x > epsilon or err_y > epsilon){
 //                                 std::cout << "the error is " << err_y << " " << err_x << std::endl;
 //                                 std::cout << "the location is " << py << " " << px << std::endl;
 //                             }

@@ -15,7 +15,7 @@ function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
      
    self.randomTensor = torch.rand(2,3,3,6,6)
    
-   self.weight = torch.randn(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW)
+   self.weight = torch.randn(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW):div(100)
    self.bias = torch.Tensor(nOutputPlane+2*kH*kW):zero()
    
    self.gradWeight = torch.Tensor(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW):zero()

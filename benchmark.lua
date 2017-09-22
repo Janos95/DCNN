@@ -22,12 +22,10 @@ weights1 = torch.Tensor(weights:storage(),1,torch.LongStorage{nOutputPlane,nInpu
 bias1 = torch.Tensor(bias:storage(),1,torch.LongStorage{nOutputPlane})
 
 net = nn.Sequential()
-net:add(nn.SpatialConvolution(nInputPlane,nOutputPlane,kW,kH):init('weight',nninit.copy,weights1):init('bias', 
-nninit.copy,bias1)) 
+net:add(nn.SpatialConvolution(nInputPlane,nOutputPlane,kW,kH)) 
 
 net_new = nn.Sequential()
-net_new:add(nn.DeformableConvolution(nInputPlane,nOutputPlane,kW,kH):init('weight',nninit.copy,weights):init('bias', 
-nninit.copy,bias)) 
+net_new:add(nn.DeformableConvolution(nInputPlane,nOutputPlane,kW,kH)) 
 
 
 
@@ -37,11 +35,11 @@ nninit.copy,bias))
 classes = {'airplane', 'automobile', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck'}
            
-input = torch.Tensor(nInputPlane,h,w):fill(1)
+input = torch.rand(nInputPlane,h,w)
 gradOutput =torch.rand(nOutputPlane,h-kH+1,w-kW+1)
 
 local x = torch.Timer()
-for i = 1,1 do
+for i = 1,100 do
 output_new=net_new:forward(input)
 net_new:backward(input, gradOutput)
 end
@@ -50,7 +48,7 @@ netnewpara, netnewgradpara = net_new:getParameters()
 netnewgradinput = net_new:updateGradInput(input,gradOutput)
 
 x = torch.Timer()
-for i = 1,1 do
+for i = 1,100 do
 output = net:forward(input)
 net:backward(input,gradOutput)
 end
@@ -58,7 +56,6 @@ netElapsedTime = x:time().real
 netpara, netgradpara = net:getParameters()
 netgradinput = net:updateGradInput(input,gradOutput)
 
-print(netgradpara[{{1,nOutputPlane*nInputPlane*kH*kW}}] - netnewgradpara[{{1,nOutputPlane*nInputPlane*kH*kW}}])
 
 
 
