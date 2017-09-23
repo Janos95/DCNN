@@ -12,8 +12,6 @@ function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
    self.nOutputPlane = nOutputPlane
    self.kW = kW
    self.kH = kH
-     
-   self.randomTensor = torch.rand(2,3,3,6,6)
    
    self.weight = torch.randn(nOutputPlane*nInputPlane*kH*kW+nInputPlane*2*kH*kW*kH*kW):div(100)
    self.bias = torch.Tensor(nOutputPlane+2*kH*kW):zero()
@@ -43,11 +41,12 @@ torch.Tensor(self.gradWeight:storage(),1+nOutputPlane*nInputPlane*kH*kW,torch.Lo
    self.offsetPredictor.gradBias = 
 torch.Tensor(self.gradBias:storage(),1+nOutputPlane,torch.LongStorage{2*kH*kW})
 
+    self.gradOffset = torch.Tensor()
+
 
 end
 
 function DeformableConvolution:updateOutput(input)
-    
     --print('updateOutput')
     local wOutputImage = input:size(3)-self.kW+1
     local hOutputImage = input:size(2)-self.kH+1
@@ -67,10 +66,8 @@ hOutputImage*wOutputImage,3)
         ,self.kW
         ,hOutputImage
         ,wOutputImage)
-        
+       
 
-    
-    
 
     assert(input:isContiguous())
     --unfoldedInput = torch.rand(self.nInputPlane*self.kH*self.kW,hOutputImage*wOutputImage)
@@ -99,7 +96,16 @@ function DeformableConvolution:updateGradInput(input,gradOutput)
 gradOutput:size(2)*gradOutput:size(3)))
 --     print(self.nInputPlane, self.nOutputPlane, self.kW, self.kH)
 --     print(gradIm2col:size())
-    gradOffset = deformableconvolution.grad_offset(
+
+    offsets = (self.offsetPredictor.output):view(
+        2
+        ,self.kH
+        ,self.kW
+        ,hOutputImage
+        ,wOutputImage)
+
+    self.gradOffset:resize(self.offsetPredictor.output:size())    
+    self.gradOffset = deformableconvolution.grad_offset(
                             input,
                             offsets,
                             self.weightDC,
@@ -109,7 +115,7 @@ gradOutput:size(2)*gradOutput:size(3)))
     self.gradInput = 
 deformableconvolution.update_grad_input(gradIm2col,self.bufferIndices, 
 self.bufferInterpolationWeights, input:size(1), input:size(2), 
-input:size(3)):add(self.offsetPredictor:updateGradInput(input,gradOffset))
+input:size(3)):add(self.offsetPredictor:updateGradInput(input,self.gradOffset))
 
     return self.gradInput
 end
@@ -128,46 +134,39 @@ function DeformableConvolution:accGradParameters(input, gradOutput, scale)
     for i = 1, self.nOutputPlane do
         gradBiasDC[i] = gradBiasDC[i] + gradOutput[i]:dot(ones)
     end
-    
+
     offsets = ((self.offsetPredictor).output):view(
         2
         ,self.kH
         ,self.kW
         ,hOutputImage
         ,wOutputImage)
-        
+              
+    gradWeightDC = deformableconvolution.grad_weight(input,gradOutput,self.bufferIndices,self.bufferInterpolationWeights,gradWeightDC[1][1])
     
-    
-    for c1star = 1, self.nInputPlane do
-        for c2star = 1, self.nOutputPlane do
-            assert(input[c1star]:view(1,input:size(2),input:size(3)):isContiguous())
-
-            input2col = deformableconvolution.im2col(
-                    input[c1star]:view(1,input:size(2),input:size(3))
-                    ,offsets:transpose(2,4):transpose(3,5):contiguous()
-                    ,gradOutput:size(2)
-                    ,gradOutput:size(3)
-                    ,torch.LongTensor() -- empty long tensor for buffer indices
-                    ,torch.Tensor() -- empty double tensor for buffer
-                    ,0) -- dont update the buffer
-                    
-            assert(input2col:isContiguous())
-
-            gradWeightDC[c2star][c1star]:add(torch.mm(
-                gradOutput[c2star]:view(1,gradOutput:size(2)*gradOutput:size(3))
-                ,input2col
-            ):view(self.kH,self.kW))
-        end
-            
-    end
-    
-    gradOffset = deformableconvolution.grad_offset(
-                            input,
-                            offsets,
-                            self.weightDC,
-                            gradOutput,
-                            self.bufferIndices,
-                            self.bufferInterpolationWeights)
+--     for c1star = 1, self.nInputPlane do
+--         for c2star = 1, self.nOutputPlane do
+--             assert(input[c1star]:view(1,input:size(2),input:size(3)):isContiguous())
+-- 
+--             input2col = deformableconvolution.im2col(
+--                     input[c1star]:view(1,input:size(2),input:size(3))
+--                     ,offsets:transpose(2,4):transpose(3,5):contiguous()
+--                     ,gradOutput:size(2)
+--                     ,gradOutput:size(3)
+--                     ,torch.LongTensor() -- empty long tensor for buffer indices
+--                     ,torch.Tensor() -- empty double tensor for buffer
+--                     ,0) -- dont update the buffer
+--                     
+--             assert(input2col:isContiguous())
+-- 
+--             gradWeightDC[c2star][c1star]:add(torch.mm(
+--                 gradOutput[c2star]:view(1,gradOutput:size(2)*gradOutput:size(3))
+--                 ,input2col
+--             ):view(self.kH,self.kW))
+--         end
+--     end
+   
+   
                                                                   
 
     --we remember the old ones and then set pointers of offsetPredictor.gradWeight/self.gradWeight 
@@ -192,7 +191,8 @@ torch.Tensor(self.gradBias:storage(),1+self.nOutputPlane,torch.LongStorage{2*sel
 torch.Tensor(self.gradWeight:storage(),1,torch.LongStorage{self.nOutputPlane,self.nInputPlane,self.kH,self.kW})
    self.gradBiasDC = torch.Tensor(self.gradBias:storage(),1,torch.LongStorage{self.nOutputPlane})
    
-    self.offsetPredictor:accGradParameters(input, gradOffset, scale)
+   --only works, if gradInput is called first. Otherwise self.gradOffset is not initalized correctly.
+    self.offsetPredictor:accGradParameters(input, self.gradOffset, scale)
     self.gradBiasDC:add(scale, gradBiasDC)
     self.gradWeightDC:add(scale, gradWeightDC)
 

@@ -14,7 +14,7 @@ local precision = 1e-5
 local jac = nn.Jacobian
 
 local from = 3
-local ki = 3
+local ki = 4
 local kj = 3
 local inj = 8
 local ini = 8

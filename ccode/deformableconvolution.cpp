@@ -204,8 +204,6 @@ static int im2col(lua_State *L)
                         assert(1 < a);
                         y_offset = offsets_data[0*t0+l*t1+k*t2+i*t3+j*t4];
                         x_offset = offsets_data[1*t0+l*t1+k*t2+i*t3+j*t4];
-                        if(y_offset >= 5000 or x_offset >= 5000)
-                            std::cout << y_offset << " " << x_offset << std::endl;
                         assert(y_offset < 5000 and x_offset < 5000);
                         odata[(c*kW*kH+l*kW+k)*s0+s1*(i*wOutputImage+j)] =
                             bilinearInterp(image, 
@@ -326,6 +324,11 @@ static int grad_offset(lua_State *L){
     std::size_t H_out = H - kH + 1;
     std::size_t W_out = W - kW + 1;
     
+    std::size_t aa = THDoubleTensor_size(offset,1);
+    std::size_t bb = THDoubleTensor_size(offset,2);
+    std::size_t cc = THDoubleTensor_size(offset,3);
+    std::size_t dd = THDoubleTensor_size(offset,4);
+    
     THDoubleTensor *gradOffset = THDoubleTensor_newWithSize3d(2*kH*kW, H_out, W_out);
     
     double* input_data = THDoubleTensor_data(input);
@@ -385,6 +388,11 @@ static int grad_offset(lua_State *L){
                             long ay = bi_data[r0*(c1*kH*kW+k*kW+l) + r1*(i*W_out+j) + 1*r2];
                             long ax = bi_data[r0*(c1*kH*kW+k*kW+l) + r1*(i*W_out+j) + 2*r2];
                             assert(c == c1);
+                            
+                            assert(k < aa);
+                            assert(l < bb);
+                            assert(i < cc);
+                            assert(j < dd);
                             double px = j+l+offset_data[t0*1+t1*k+t2*l+t3*i+t4*j];
                             double py = i+k+offset_data[t0*0+t1*k+t2*l+t3*i+t4*j];
     
@@ -398,10 +406,11 @@ static int grad_offset(lua_State *L){
                             
                             double px_projected = projection(px,double(W-1));
                             double py_projected = projection(py,double(H-1));
-                            assert(w0 == 1 - (py_projected - ay));
-                            assert(w1 == 1 - (px_projected - ax));
-                            assert(w2 == 1 - ((ay+1)-py_projected));
-                            assert(w3 == 1 - ((ax+1)-px_projected));
+                            
+//                             std::cout << (w0 - 1 + (py_projected - ay)) << std::endl;
+//                             std::cout << (w1 - 1 + (px_projected - ax)) << std::endl;
+//                             std::cout << (w2 - 1 + ((ay+1)-py_projected))<<std::endl;
+//                             std::cout << (w3 - 1 + ((ax+1)-px_projected))<<std::endl;
                             
                             double vx = 0;
                             double vy = 0;
@@ -460,8 +469,148 @@ static int grad_offset(lua_State *L){
 
 }  
 
+static int grad_weight(lua_State *L){
+//     input
+//     gradOutput
+//     offsets
+//     bi
+//     bw
+//     
+    
+    THDoubleTensor *input = (THDoubleTensor*)luaT_checkudata(L, 1, "torch.DoubleTensor");
+    THDoubleTensor *gradOutput = (THDoubleTensor*)luaT_checkudata(L, 2, "torch.DoubleTensor");
+    THLongTensor *bi = (THLongTensor*)luaT_checkudata(L, 3, "torch.LongTensor");
+    THDoubleTensor *bw = (THDoubleTensor*)luaT_checkudata(L, 4, "torch.DoubleTensor");
+    THDoubleTensor *gradWeightDC_0_0 = (THDoubleTensor*)luaT_checkudata(L, 5, "torch.DoubleTensor");
+
+    
+    std::size_t C2 = THDoubleTensor_size(gradOutput,0);
+    std::size_t H_out = THDoubleTensor_size(gradOutput,1);
+    std::size_t W_out = THDoubleTensor_size(gradOutput,2);
+    
+    std::size_t C1 = THDoubleTensor_size(input,0);
+    std::size_t H = THDoubleTensor_size(input,1);
+    std::size_t W = THDoubleTensor_size(input,2);
+    
+    std::size_t kH = H - H_out + 1;
+    std::size_t kW = W - W_out + 1;
+   
+    
+    THDoubleTensor *gradWeightDC = THDoubleTensor_newWithSize4d(C2,C1,kH,kW);
+    THDoubleTensor *input2col = THDoubleTensor_newWithSize2d(H_out*W_out,kH*kW);
+    
+    THDoubleStorage_fill(THDoubleTensor_storage(gradWeightDC), 0.0);
+    
+    double* input_data = THDoubleTensor_data(input);
+    double* gradOutput_data = THDoubleTensor_data(gradOutput);
+    long* bi_data = THLongTensor_data(bi);
+    double* bw_data = THDoubleTensor_data(bw);
+    double* input2col_data = THDoubleTensor_data(input2col);
+    double* gradWeight_data = THDoubleTensor_data(gradWeightDC);
+    double *gradWeightDC_0_0_data = THDoubleTensor_data(gradWeightDC_0_0);
+    
+    std::size_t s0 = THDoubleTensor_stride(input, 0);
+    std::size_t s1 = THDoubleTensor_stride(input, 1);
+    std::size_t s2 = THDoubleTensor_stride(input, 2);
+    
+    std::size_t t0 = THDoubleTensor_stride(input2col, 0);
+    std::size_t t1 = THDoubleTensor_stride(input2col, 1);
+    
+    std::size_t z0 = THDoubleTensor_stride(gradOutput, 0);
+    std::size_t z1 = THDoubleTensor_stride(gradOutput, 1);
+    std::size_t z2 = THDoubleTensor_stride(gradOutput, 2);
+
+    std::size_t r0 = THLongTensor_stride(bi, 0);
+    std::size_t r1 = THLongTensor_stride(bi, 1);
+    std::size_t r2 = THLongTensor_stride(bi, 2);
+   
+    std::size_t q0 = THDoubleTensor_stride(bw, 0);
+    std::size_t q1 = THDoubleTensor_stride(bw, 1);
+    std::size_t q2 = THDoubleTensor_stride(bw, 2);
+    
+    std::size_t v0 = THDoubleTensor_stride(gradWeightDC, 0);
+    std::size_t v1 = THDoubleTensor_stride(gradWeightDC, 1);
+    std::size_t v2 = THDoubleTensor_stride(gradWeightDC, 2);
+    
+    std::size_t u0 = THDoubleTensor_stride(gradWeightDC_0_0, 0);
+    std::size_t u1 = THDoubleTensor_stride(gradWeightDC_0_0, 1);
+
+    
+    std::size_t c1star,c2star,i,j,l,k;
+    
+    
+    for(c1star = 0; c1star < C1; c1star++){
+        for(c2star = 0; c2star < C2; c2star++){
+            for (i = 0; i < kH; i++){
+                for(j = 0; j < kW; j++){
+                    for (l = 0; l < W_out; l++){
+                        for (k = 0; k < H_out; k++){
+                    
+                        long c = bi_data[(c1star*kH*kW+i*kW+j)*r0+(k*W_out+l)*r1 +0*r2];
+                        long ay = bi_data[(c1star*kH*kW+i*kW+j)*r0+(k*W_out+l)*r1 +1*r2];
+                        long ax = bi_data[(c1star*kH*kW+i*kW+j)*r0+(k*W_out+l)*r1 +2*r2];
+                        
+                        assert(c == c1star);
+                        
+                        double w0 = bw_data[(c1star*kH*kW+i*kW+j)*q0+(k*W_out+l)*q1 +0*q2];
+                        double w1 = bw_data[(c1star*kH*kW+i*kW+j)*q0+(k*W_out+l)*q1 +1*q2];
+                        double w2 = bw_data[(c1star*kH*kW+i*kW+j)*q0+(k*W_out+l)*q1 +2*q2];
+                        double w3 = bw_data[(c1star*kH*kW+i*kW+j)*q0+(k*W_out+l)*q1 +3*q2];
+                        
+                        input2col_data[(k*W_out+l)*t0+t1*(i*kW+j)] =
+                            w0*w1*input_data[c1star*s0+ay*s1+ax*s2]
+                        +w0*w3*input_data[c1star*s0+ay*s1+(ax+1)*s2]
+                        +w1*w2*input_data[c1star*s0+(ay+1)*s1+ax*s2]
+                        +w2*w3*input_data[c1star*s0+(ay+1)*s1+(ax+1)*s2];
+                        
+                        }
+                    }
+                }
+            }
+            THLongTensor *view_size = THLongTensor_newWithSize1d(2);
+            
+            THLongTensor_set1d(view_size, 0, 1);
+            THLongTensor_set1d(view_size, 1, H_out*W_out);
+            
+            THDoubleTensor *gradOutput_view = THDoubleTensor_newView(THDoubleTensor_newSelect(gradOutput, 0, c2star), THLongTensor_storage(view_size));
+            THDoubleTensor *gradWeightDC_c2star_c1star = THDoubleTensor_newSelect(THDoubleTensor_newSelect(gradWeightDC, 0, c2star), 0, c1star);
+            
+//             std::size_t uu0 = THDoubleTensor_stride(gradWeightDC_c2star_c1star, 0);
+//             std::size_t uu1 = THDoubleTensor_stride(gradWeightDC_c2star_c1star, 1);
+//             double *gradWeightDC_c2star_c1star_data = THDoubleTensor_data(gradWeightDC_c2star_c1star);
+//             
+//             if(c1star == 0 and c2star == 0)
+//                 assert(gradWeightDC_0_0_data[u0*i+u1*j] == gradWeightDC_c2star_c1star_data[uu0*i + uu1*j]);
+            
+            THDoubleTensor *result = THDoubleTensor_newWithSize2d(1,kH*kW);
+            THDoubleStorage_fill(THDoubleTensor_storage(result), 0.0);
+            THDoubleTensor_addmm(result, 0, result, 1,gradOutput_view,input2col);
+            
+            THLongTensor_set1d(view_size, 0, kH);
+            THLongTensor_set1d(view_size, 1, kW);
+            
+            THDoubleTensor *result_view = THDoubleTensor_newView(result, THLongTensor_storage(view_size));
+            
+//             std::size_t a = THDoubleTensor_size(result_view,0);
+//             std::size_t b = THDoubleTensor_size(result_view,1);
+//             std::cout << a << " " << b << std::endl;
+            
+            THDoubleTensor_cadd(gradWeightDC_c2star_c1star, gradWeightDC_c2star_c1star,1,result_view);
+    
+            THLongTensor_free(view_size);
+            THDoubleTensor_free(result);
+
+        }       
+    }
+    THDoubleTensor_free(input2col);
+    luaT_pushudata(L,gradWeightDC, "torch.DoubleTensor");
+    
+    return 1;
+}
+
 
 static const struct luaL_Reg Global_funcs[] = {
+    {"grad_weight", grad_weight},
 	{"im2col", im2col},
     {"bilinearInterpolation", bilinearInterpolation},
     {"update_grad_input", update_grad_input},

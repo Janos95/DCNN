@@ -62,8 +62,14 @@ criterion = nn.ClassNLLCriterion()
 
 trainer = nn.StochasticGradient(net, criterion)
 trainer.learningRate = 0.001
-trainer.maxIteration = 2 
-        
+trainer.maxIteration = 55 
+trainer.hookIteration = function()
+    print('Saving the model...')
+    net:clearState()
+    torch.save('checkpoint2.t7', net)
+    print('Done.')
+end
+
 trainer:train(trainset)
 
 testset.data = testset.data:double()   -- convert from Byte tensor to Double tensor
