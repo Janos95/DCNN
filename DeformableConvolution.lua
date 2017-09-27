@@ -1,12 +1,20 @@
+--TODO
+--include the only offset flag
+--initialization in c code
+--remove buffer flag
+--add comments
+--fix formatting
+
 require 'deformableconvolution'
 require 'nn'
 local nninit= require 'nninit'
 
 local DeformableConvolution, parent = torch.class('nn.DeformableConvolution', 'nn.Module')
 
-function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH)
+function DeformableConvolution:__init(nInputPlane, nOutputPlane, kW, kH--[[, onlyOffsets]])
    parent.__init(self)
 
+--    self.onlyOffsets = onlyOffsets
 
    self.nInputPlane = nInputPlane
    self.nOutputPlane = nOutputPlane
@@ -193,8 +201,10 @@ torch.Tensor(self.gradWeight:storage(),1,torch.LongStorage{self.nOutputPlane,sel
    
    --only works, if gradInput is called first. Otherwise self.gradOffset is not initalized correctly.
     self.offsetPredictor:accGradParameters(input, self.gradOffset, scale)
-    self.gradBiasDC:add(scale, gradBiasDC)
-    self.gradWeightDC:add(scale, gradWeightDC)
+--     if(not self.onlyOffsets) then
+--     self.gradBiasDC:add(scale, gradBiasDC)
+--     self.gradWeightDC:add(scale, gradWeightDC)
+--     end
 
     
     --mapping the pointers back

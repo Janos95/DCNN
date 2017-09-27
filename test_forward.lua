@@ -8,14 +8,13 @@ local nninit= require 'nninit'
 
 
 --net = nn.Sequential()
-net = torch.load('checkpoint.t7')
+net = torch.load('checkpoint4.t7')
 
 testset = torch.load('cifar10-test-normalized.t7')
 testset.data = testset.data:double()   -- convert from Byte tensor to Double tensor
 
 correct = 0
 for i=1,10000 do
-    print(i)
     local groundtruth = testset.label[i]
     local prediction = net:forward(testset.data[i])
     local confidences, indices = torch.sort(prediction, true) 
